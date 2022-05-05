@@ -36,11 +36,13 @@ class RequestHandler {
   private static final Logger LOG =
       Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+  private final ServiceToClassMappingHelper mServiceToClassMappingHelper;
   private final MessageHandler mMessageHandler;
   private final GrpcServiceConnectionManager mGrpcServiceConnectionManager;
 
   @Inject
-  RequestHandler(GrpcServiceConnectionManager g, MessageHandler m) {
+  RequestHandler(GrpcServiceConnectionManager g, MessageHandler m, ServiceToClassMappingHelper s) {
+    mServiceToClassMappingHelper = s;
     mMessageHandler = m;
     mGrpcServiceConnectionManager = g;
   }
@@ -114,13 +116,7 @@ class RequestHandler {
   }
 
   private Class<?> getClassObject(String className) {
-    Class rpcClass = null;
-    try {
-      rpcClass = Class.forName(className + "Grpc");
-    } catch (ClassNotFoundException e) {
-      LOG.info("no such class " + className);
-    }
-    return rpcClass;
+    return mServiceToClassMappingHelper.getClassObject(className);
   }
 
   private io.grpc.stub.AbstractStub getRpcStub(Channel ch, Class cls, String stubName) {
