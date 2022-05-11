@@ -32,11 +32,13 @@ class GrpcServiceConnectionManager {
   private static final Logger LOG =
       Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
   private final ManagedChannel mChannel;
+  private static final int LARGE_MAX_MESSAGE_SIZE = 524288000;
 
   GrpcServiceConnectionManager(int grpcPortNum) {
     // TODO: Manage a connection pool.
     mChannel = ManagedChannelBuilder.forAddress("localhost", grpcPortNum)
         .usePlaintext()
+		.maxInboundMessageSize(LARGE_MAX_MESSAGE_SIZE)
         .build();
     LOG.info("**** connection channel initiated");
   }
