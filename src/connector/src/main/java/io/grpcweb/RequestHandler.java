@@ -90,7 +90,7 @@ class RequestHandler {
       // Invoke the rpc call
       asyncStubCall.invoke(asyncStub, inObj,
           new GrpcCallResponseReceiver(sendResponse, latch));
-      if (!latch.await(2000, TimeUnit.MILLISECONDS)) {
+      if (!latch.await(10 * 365, TimeUnit.DAYS)) { //long timeout for long lived streams
         LOG.warning("grpc call took too long!");
       }
     } catch (Exception e) {

@@ -111,7 +111,8 @@ class SendResponse {
       }
     } catch (IOException e) {
       // TODO what to do here?
-      LOG.warning("can't write?");
+      LOG.warning("Cannot write to stream, client connection closed prematurely");
+	  throw new RuntimeException(e);
     }
   }
 
